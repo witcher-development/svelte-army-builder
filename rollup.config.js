@@ -4,6 +4,7 @@ import commonjs from "rollup-plugin-commonjs";
 import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
 import typescript from "rollup-plugin-typescript2";
+import image from '@rollup/plugin-image';
 
 const svelteOptions = require("./svelte.config");
 
@@ -18,6 +19,7 @@ export default {
     file: "public/bundle.js"
   },
   plugins: [
+    image(),
     svelte({
       ...svelteOptions,
       // enable run-time checks when not in production
