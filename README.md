@@ -1,20 +1,45 @@
-*Psst — looking for a shareable component template? Go here --> [sveltejs/component-template](https://github.com/sveltejs/component-template)*
+# Typescript template for Svelte v3
 
 ---
 
 # svelte app
 
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
+This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/pyoner/svelte-typescript
 
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+## Install
 
+### For Linux users
 ```bash
-npx degit sveltejs/template svelte-app
-cd svelte-app
+mkdir svelte-app
+curl -L https://github.com/pyoner/svelte-typescript/tarball/master > svelte-typescript.tar
+tar --strip-components=3 --wildcards --one-top-level=svelte-app -xf svelte-typescript.tar */packages/template
 ```
+
+### For Mac users
+```zsh
+mkdir svelte-app
+curl -L https://github.com/pyoner/svelte-typescript/tarball/master > svelte-typescript.tar
+tar --strip-components=3 -C svelte-app -xf svelte-typescript.tar '*/packages/template/' 
+```
+
+### For Windows users
+Download https://github.com/pyoner/svelte-typescript/archive/master.zip and extract template from `packages/template`
 
 *Note that you will need to have [Node.js](https://nodejs.org) installed.*
 
+### For VSCode users
+
+Regardless of your OS, if you're using VSCode as your IDE for your Svelte project, you also need to do an extra step in order to have full language support with [svelte-code extension](https://github.com/UnwrittenFun/svelte-vscode).
+
+Create a `svelte.config.js` file in the root of your project with the following content:
+
+```
+const { preprocess } = require("@pyoner/svelte-ts-preprocess")
+
+module.exports = {
+  preprocess: preprocess()
+}
+```
 
 ## Get started
 
@@ -33,30 +58,6 @@ npm run dev
 
 Navigate to [localhost:5000](http://localhost:5000). You should see your app running. Edit a component file in `src`, save it, and reload the page to see your changes.
 
-By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
-
-
-## Building and running in production mode
-
-To create an optimised version of the app:
-
-```bash
-npm run build
-```
-
-You can run the newly built app with `npm run start`. This uses [sirv](https://github.com/lukeed/sirv), which is included in your package.json's `dependencies` so that the app will work when you deploy to platforms like [Heroku](https://heroku.com).
-
-
-## Single-page app mode
-
-By default, sirv will only respond to requests that match files in `public`. This is to maximise compatibility with static fileservers, allowing you to deploy your app anywhere.
-
-If you're building a single-page app (SPA) with multiple routes, sirv needs to be able to respond to requests for *any* path. You can make it so by editing the `"start"` command in package.json:
-
-```js
-"start": "sirv public --single"
-```
-
 
 ## Deploying to the web
 
@@ -71,8 +72,7 @@ npm install -g now
 Then, from within your project folder:
 
 ```bash
-cd public
-now deploy --name my-project
+now
 ```
 
 As an alternative, use the [Now desktop client](https://zeit.co/download) and simply drag the unzipped project folder to the taskbar icon.
@@ -89,5 +89,5 @@ Then, from within your project folder:
 
 ```bash
 npm run build
-surge public my-project.surge.sh
+surge public
 ```
