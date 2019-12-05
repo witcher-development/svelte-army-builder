@@ -1,4 +1,5 @@
 // svelte options exported for svelte-vscode
+// import autoPreprocess from 'svelte-preprocess';
 
 const {
 	preprocess: makeTsPreprocess,

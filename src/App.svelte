@@ -13,7 +13,7 @@
 
 <style type="text/scss">
 	.app {
-		/*background-image: url(../);*/
+		background-image: url(./assets/bgi.jpg);
 	}
 
 	h1 {
@@ -22,6 +22,6 @@
 </style>
 
 <div class="app">
-	<img src={bgi} alt="" />
+
 	<h1>Hello {name}!</h1>
 </div>
