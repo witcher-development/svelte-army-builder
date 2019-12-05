@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	// @ts-ignore
-	import bgi from './assets/bgi.jpg';
+	import bgi from 'assets/bgi.jpg';
 	import myStore from './store';
 
 	const name: string = 'test';
@@ -13,15 +12,14 @@
 
 <style type="text/scss">
 	.app {
-		background-image: url(./assets/bgi.jpg);
-	}
-
-	h1 {
-		color: #fff;
+		/*background-image: url(assets/bgi.jpg);*/
+		h1 {
+			color: #fff;
+		}
 	}
 </style>
 
 <div class="app">
-
+		<img src={bgi} alt="">
 	<h1>Hello {name}!</h1>
 </div>

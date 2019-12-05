@@ -5,8 +5,10 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 import image from '@rollup/plugin-image';
+import { scss, typescript as typescriptPreprocess } from 'svelte-preprocess';
+import alias from '@rollup/plugin-alias';
 
-const svelteOptions = require('./svelte.config');
+// const svelteOptions = require('./svelte.config');
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -19,9 +21,19 @@ export default {
 		file: 'public/bundle.js',
 	},
 	plugins: [
-		image(),
+		alias({
+			resolve: ['.js', '.ts'],
+			entries: {
+				assets: 'public/assets',
+			},
+		}),
 		svelte({
-			...svelteOptions,
+			preprocess: [
+				scss(),
+				typescriptPreprocess({
+					tsconfigFile: './tsconfig.json',
+				}),
+			],
 			// enable run-time checks when not in production
 			dev: !production,
 			// we'll extract any component CSS out into
@@ -43,6 +55,8 @@ export default {
 		}),
 		commonjs(),
 		typescript(),
+
+		image(),
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production

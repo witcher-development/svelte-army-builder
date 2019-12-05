@@ -1,5 +1,6 @@
 // svelte options exported for svelte-vscode
 // import autoPreprocess from 'svelte-preprocess';
+// import autoPreprocess, { scss, typescript } from 'svelte-preprocess';
 
 const {
 	preprocess: makeTsPreprocess,
@@ -9,16 +10,16 @@ const {
 
 const env = createEnv();
 const compilerOptions = readConfigFile(env);
-const preprocessOptions = {
+const tsOptions = {
 	env,
 	compilerOptions: {
 		...compilerOptions,
 		allowNonTsExtensions: true,
 	},
 };
-const preprocess = makeTsPreprocess(preprocessOptions);
+// const preprocess = autoPreprocess();
 
 module.exports = {
 	dev: process.env.NODE_ENV !== 'development',
-	preprocess,
+	// preprocess,
 };
