@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
+	// @ts-ignore
 	import bgi from './assets/bgi.jpg';
 	import myStore from './store';
 
@@ -8,7 +9,6 @@
 	onMount(() => {
 		console.log('App mounted');
 	});
-
 </script>
 
 <style type="text/scss">
