@@ -1,2 +1,7 @@
 import { writable } from "svelte/store";
-export default 1;
+
+const initAuthState = localStorage.getItem('app.auth');
+
+const authStore = writable(initAuthState ? initAuthState : false);
+
+export { authStore };
