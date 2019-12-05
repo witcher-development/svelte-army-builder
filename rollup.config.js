@@ -7,8 +7,7 @@ import typescript from 'rollup-plugin-typescript2';
 import image from '@rollup/plugin-image';
 import { scss, typescript as typescriptPreprocess } from 'svelte-preprocess';
 import alias from '@rollup/plugin-alias';
-
-// const svelteOptions = require('./svelte.config');
+import serve from 'rollup-plugin-serve';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -57,10 +56,15 @@ export default {
 		typescript(),
 
 		image(),
+		serve({
+			contentBase: 'public',
+			historyApiFallback: true,
+			// port: 5001,
+		}),
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
-		!production && livereload('public'),
+		!production && livereload(),
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
