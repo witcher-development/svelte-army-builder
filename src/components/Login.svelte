@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { playerStore } from '../store';
+	import { charactersStore } from '../store';
 
 	onMount(() => {
 		console.log('Login mounted');
@@ -25,10 +25,25 @@
 			justify-content: center;
 			align-items: center;
 
+			margin-top: -50px;
 			padding: 0;
+
+			list-style: none;
 		}
 
 		&__player {
+			margin: 0 20px;
+
+			border-radius: 50%;
+
+			cursor: pointer;
+			transition: box-shadow .4s;
+
+			img {
+				width: 100%;
+				transition: transform .2s;
+			}
+
 			p {
 				margin-top: -28px;
 
@@ -36,10 +51,26 @@
 				color: #fff;
 				text-shadow: 0 2px 4px rgba(0,0,0,.5);
 				text-align: center;
+
+				transition: transform .2s;
+			}
+
+			&:hover {
+				box-shadow: 0 0 110px 10px #fff, inset 0 0 89px -11px #fff;
+
+				img {
+					transform: scale(1.2);
+				}
+
+				p {
+					transform: translateY(-200px);
+				}
 			}
 		}
 
 		&__button {
+			display: none;
+
 			width: 160px;
 			height: 43px;
 
@@ -131,7 +162,7 @@
 
 <div class="login">
 	<ul class="login__players">
-		{#each $playerStore as { id, name, image }}
+		{#each $charactersStore as { id, name, image }}
 			<li class="login__player">
 				<img src={image} alt={name} />
 				<p>{name}</p>

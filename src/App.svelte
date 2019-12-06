@@ -15,9 +15,9 @@
 			component: Desk,
 			onlyIf: {
 				guard: () => {
-					return $authStore;
+					return $authStore.auth;
 				},
-				redirect: '/',
+				redirect: '/login',
 			},
 		},
 		{

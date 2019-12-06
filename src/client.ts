@@ -30,3 +30,11 @@ export const getAccessToken = async () => {
 	const data = await axois.get(authUrl);
 	token = data.data.access_token;
 };
+
+export const login = (characterId) => {
+	return new Promise(resolve => {
+		setTimeout(() => {
+
+		}, 1000)
+	});
+};
