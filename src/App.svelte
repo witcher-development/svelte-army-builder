@@ -2,26 +2,27 @@
 	import { onMount } from 'svelte';
 	import { Router, navigateTo } from 'svelte-router-spa';
 
+	import Loader from './components/Loader.svelte';
 	import Login from './components/Login.svelte';
 	import Desk from './components/Desk.svelte';
 
-	import { authStore } from './store';
+	import { authStore, loadingStore } from './store';
 
 	import logo from 'assets/logo.png';
 
 	const routes = [
 		{
-			name: '/login',
+			name: '/',
 			component: Desk,
 			onlyIf: {
 				guard: () => {
-					return $authStore.auth;
+					return $authStore.token;
 				},
 				redirect: '/login',
 			},
 		},
 		{
-			name: '/',
+			name: '/login',
 			component: Login,
 		},
 	];
@@ -47,6 +48,11 @@
 		position: relative;
 
 		img {
+			position: absolute;
+			top: 0;
+			left: 50%;
+			transform: translateX(-50%);
+
 			width: 200px;
 		}
 	}
@@ -54,5 +60,8 @@
 
 <div class="app">
 	<img src={logo} alt="logo" />
+  {#if $loadingStore}
+		<Loader />
+  {/if}
 	<Router {routes} />
 </div>

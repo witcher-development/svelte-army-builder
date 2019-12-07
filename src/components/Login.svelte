@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { charactersStore } from '../store';
+	import { navigateTo } from 'svelte-router-spa';
+	import { charactersStore, login } from '../store';
 
 	onMount(() => {
 		console.log('Login mounted');
@@ -9,6 +10,15 @@
 			console.log('Login unmounted');
 		};
 	});
+
+	const onClickHero = async (id: number) => {
+		const response = await login(id);
+		if (response) {
+			navigateTo('/');
+		} else {
+			alert('Error')
+		}
+	};
 </script>
 
 <style type="text/scss">
@@ -20,28 +30,35 @@
 
 		height: 100%;
 
-		&__players {
+		h1 {
+			margin-bottom: 50px;
+
+			color: #fff;
+			font-size: 45px;
+			font-weight: 300;
+		}
+
+		&__characters {
 			display: flex;
 			justify-content: center;
 			align-items: center;
 
-			margin-top: -50px;
 			padding: 0;
 
 			list-style: none;
 		}
 
-		&__player {
+		&__character {
 			margin: 0 20px;
 
 			border-radius: 50%;
 
 			cursor: pointer;
-			transition: box-shadow .4s;
+			transition: box-shadow 0.4s;
 
 			img {
 				width: 100%;
-				transition: transform .2s;
+				transition: transform 0.2s;
 			}
 
 			p {
@@ -49,10 +66,10 @@
 
 				font-size: 30px;
 				color: #fff;
-				text-shadow: 0 2px 4px rgba(0,0,0,.5);
+				text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 				text-align: center;
 
-				transition: transform .2s;
+				transition: transform 0.2s;
 			}
 
 			&:hover {
@@ -78,7 +95,7 @@
 			padding: 12px 31px;
 
 			background-image: linear-gradient(180deg, #ededed, #573b23);
-			box-shadow: 0 3px 6px 0 rgba(0,0,0,.45);
+			box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.45);
 			border-radius: 6px;
 
 			border: none;
@@ -108,7 +125,7 @@
 				left: 5px;
 
 				border-radius: 6px;
-				background-image: linear-gradient(180deg,#f756fe,#661f91);
+				background-image: linear-gradient(180deg, #f756fe, #661f91);
 			}
 
 			&_inner {
@@ -120,7 +137,7 @@
 				z-index: 1;
 
 				border-radius: 6px;
-				background-image: linear-gradient(to right,#4c0d7a, #b921c4, #4c0d7a);
+				background-image: linear-gradient(to right, #4c0d7a, #b921c4, #4c0d7a);
 
 				&:before {
 					content: '';
@@ -133,11 +150,16 @@
 					height: 100%;
 
 					border-radius: 6px;
-					background-image: linear-gradient(to right, #991db5, #e235ee, #991db5);
+					background-image: linear-gradient(
+						to right,
+						#991db5,
+						#e235ee,
+						#991db5
+					);
 
 					opacity: 0;
 
-					transition: opacity .2s;
+					transition: opacity 0.2s;
 				}
 			}
 
@@ -161,9 +183,10 @@
 </style>
 
 <div class="login">
-	<ul class="login__players">
+	<h1>Choose a hero</h1>
+	<ul class="login__characters">
 		{#each $charactersStore as { id, name, image }}
-			<li class="login__player">
+			<li class="login__character" on:click={() => onClickHero(id)}>
 				<img src={image} alt={name} />
 				<p>{name}</p>
 			</li>
@@ -171,7 +194,7 @@
 	</ul>
 
 	<button class="login__button">
-		<span class="login__button_inner"></span>
+		<span class="login__button_inner" />
 		<span class="login__button-text">Join</span>
 	</button>
 </div>

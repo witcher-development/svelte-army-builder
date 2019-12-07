@@ -8,6 +8,7 @@ import image from '@rollup/plugin-image';
 import { scss, typescript as typescriptPreprocess } from 'svelte-preprocess';
 import alias from '@rollup/plugin-alias';
 import serve from 'rollup-plugin-serve';
+import json from '@rollup/plugin-json';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -20,6 +21,7 @@ export default {
 		file: 'public/bundle.js',
 	},
 	plugins: [
+		json(),
 		alias({
 			resolve: ['.js', '.ts'],
 			entries: {

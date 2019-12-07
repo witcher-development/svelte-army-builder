@@ -1,5 +1,6 @@
-import { writable } from 'svelte/store';
-import {} from './client';
+import { readable, writable, derived, get } from 'svelte/store';
+import { auth, getFreeId, createPlayer } from './client';
+import { Player, Response, Token } from './types';
 
 // @ts-ignore
 import Jaina from 'assets/players/Jaina.png';
@@ -7,17 +8,6 @@ import Jaina from 'assets/players/Jaina.png';
 import Malfurion from 'assets/players/Malfurion.png';
 // @ts-ignore
 import Rexxar from 'assets/players/Rexxar.png';
-
-interface Auth {
-	playerId: number,
-	auth: boolean,
-}
-const initAuthState: Auth = {
-	playerId: 0,
-	auth: false,
-};
-const authFromStorage = localStorage.getItem('app.auth');
-const authStore = writable(authFromStorage ? JSON.parse(authFromStorage) : initAuthState);
 
 interface Character {
 	id: number;
@@ -41,31 +31,57 @@ const initCharactersState: Character[] = [
 		image: Rexxar,
 	},
 ];
-const charactersStore = writable(initCharactersState);
+const charactersStore = readable(initCharactersState, () => {});
 
-interface Card {
-	id: number;
-	name: string;
-	health: number;
-	attack: number;
-	image: string;
-	text: string;
-	rarity: number;
-}
-
-interface Player {
-	id: number,
-	characterId: number;
-	auth: boolean;
-	deck: Card[];
-}
 const playerInitState: Player = {
 	id: 0,
 	characterId: 0,
-	auth: false,
+	token: false,
 	deck: [],
 };
-const playerStore = writable(playerInitState);
-const selectPlayer = (id) => {};
+const playerFromStorage = JSON.parse(localStorage.getItem('app.player') || '');
+const playerStore = writable(playerFromStorage || playerInitState);
 
-export { authStore, charactersStore, playerStore };
+interface Auth {
+	token: Token;
+}
+const initAuthState: Auth = {
+	token: false,
+};
+const authStore = derived(playerStore, (player) => {
+	if (player) {
+		return {
+			token: player.token,
+		};
+	} else {
+		return initAuthState;
+	}
+});
+
+const login = async (characterId: number): Promise<boolean> => {
+	const response: Response<Player | null> = await auth(characterId);
+
+	let player = get(playerStore);
+
+	if (!response.status) {
+		if (response.message === 'db is empty') {
+			player.id = 1;
+		}
+		if (response.message === 'not found') {
+			player.id = await getFreeId();
+		}
+	}
+
+	player.characterId = characterId;
+
+	const playerResponse = await createPlayer(player);
+	player = playerResponse.data;
+
+	localStorage.setItem('app.player', JSON.stringify(player));
+
+	return true;
+};
+
+const loadingStore = writable(false);
+
+export { loadingStore, authStore, charactersStore, playerStore, login };
