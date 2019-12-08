@@ -21,7 +21,6 @@ export default {
 		file: 'public/bundle.js',
 	},
 	plugins: [
-		json(),
 		alias({
 			resolve: ['.js', '.ts'],
 			entries: {
@@ -58,15 +57,16 @@ export default {
 		typescript(),
 
 		image(),
+		json(),
 		serve({
 			contentBase: 'public',
 			historyApiFallback: true,
-			// port: 5001,
+			port: 5001,
 		}),
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
-		!production && livereload(),
+		!production && livereload('public'),
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify

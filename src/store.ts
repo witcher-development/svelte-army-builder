@@ -39,7 +39,9 @@ const playerInitState: Player = {
 	token: false,
 	deck: [],
 };
-const playerFromStorage = JSON.parse(localStorage.getItem('app.player') || '');
+const playerFromStorage = JSON.parse(
+	localStorage.getItem('app.player') || 'null',
+);
 const playerStore = writable(playerFromStorage || playerInitState);
 
 interface Auth {
@@ -57,6 +59,7 @@ const authStore = derived(playerStore, (player) => {
 		return initAuthState;
 	}
 });
+console.log(get(authStore));
 
 const login = async (characterId: number): Promise<boolean> => {
 	const response: Response<Player | null> = await auth(characterId);

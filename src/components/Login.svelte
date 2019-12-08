@@ -14,6 +14,7 @@
 	const onClickHero = async (id: number) => {
 		const response = await login(id);
 		if (response) {
+			console.log('fired');
 			navigateTo('/');
 		} else {
 			alert('Error')
