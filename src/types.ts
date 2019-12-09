@@ -3,10 +3,12 @@ export interface Card {
 	name: string;
 	health: number;
 	attack: number;
+	manaCost: number;
 	image: string;
 	text: string;
 	flavorText: string;
-	rarity: number;
+	rarityId: number;
+	classId: number;
 }
 
 export interface CardResponse {
@@ -20,6 +22,7 @@ export interface Player {
 	id: number;
 	characterId: number;
 	token: Token;
+	classId: number;
 	deck: Card[];
 }
 

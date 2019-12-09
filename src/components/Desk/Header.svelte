@@ -1,18 +1,22 @@
 <script lang="ts">
 	import { tick } from 'svelte';
+	import { get } from 'svelte/store';
 	import { navigateTo } from 'svelte-router-spa';
-	import { logout } from '../../store';
+	import { logout, playerStore, getClassNameById } from '../../store';
 
 	const onClickLogout = () => {
 		logout();
 		navigateTo('/login');
 	};
+
+	let name;
+
 </script>
 
 <style type="text/scss">
 	.header {
 		display: flex;
-		justify-content: flex-end;
+		justify-content: space-between;
 		align-items: center;
 
 		width: 100%;
@@ -48,5 +52,6 @@
 </style>
 
 <header class="header">
+	<p>{get(playerStore).name}: {getClassNameById(get(playerStore).classId)}</p>
 	<a on:click|preventDefault={onClickLogout}>logout</a>
 </header>

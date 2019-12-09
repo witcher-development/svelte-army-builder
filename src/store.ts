@@ -34,6 +34,55 @@ const initCharactersState: Character[] = [
 ];
 const charactersStore = readable(initCharactersState, () => {});
 
+const classesInitState = [
+	{
+		id: 2,
+		name: 'Druid',
+	},
+	{
+		id: 3,
+		name: 'Hunter',
+	},
+	{
+		id: 4,
+		name: 'Mage',
+	},
+	{
+		id: 5,
+		name: 'Paladin',
+	},
+	{
+		id: 6,
+		name: 'Priest',
+	},
+	{
+		id: 7,
+		name: 'Rogue',
+	},
+	{
+		id: 8,
+		name: 'Shaman',
+	},
+	{
+		id: 9,
+		name: 'Warlock',
+	},
+	{
+		id: 10,
+		name: 'Warrior',
+	},
+	{
+		id: 12,
+		name: 'Neutral',
+	},
+];
+const classesStore = readable(classesInitState, () => {});
+
+export const getClassNameById = (classId: number): string => {
+	const classObject = get(classesStore).find(({ id }) => id === classId);
+	return classObject ? classObject.name : 'All classes';
+};
+
 const playerFromStorage = JSON.parse(
 	localStorage.getItem('app.player') || 'null',
 );
@@ -88,6 +137,7 @@ export {
 	loadingStore,
 	authStore,
 	charactersStore,
+	classesStore,
 	playerStore,
 	login,
 	logout,

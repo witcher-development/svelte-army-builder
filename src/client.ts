@@ -70,6 +70,17 @@ export const getFreeId = async (): Promise<number> => {
 	return playersDB.length ? playersDB[playersDB.length - 1].id + 1 : 1;
 };
 
+const getCharacterClass = (characterId: number): number => {
+	if (characterId === 1) {
+		return 4;
+	} else if (characterId === 2) {
+		return 2;
+	} else if (characterId === 3) {
+		return 3;
+	}
+	return 0;
+};
+
 export const auth = async (
 	characterId: number,
 ): Promise<Response<Player | null>> => {
@@ -83,6 +94,7 @@ export const auth = async (
 
 	player.token = createUserToken();
 	player.characterId = characterId;
+	player.classId = getCharacterClass(characterId);
 	return createResponse<Player>(player);
 };
 
@@ -95,6 +107,7 @@ export const createPlayer = async (
 	const player: Player = Object.assign(playerTemplate, {
 		id: await getFreeId(),
 		characterId,
+		classId: getCharacterClass(characterId),
 	});
 
 	localStorage.setItem('app.players', JSON.stringify([...playersDB, player]));
@@ -104,21 +117,36 @@ export const createPlayer = async (
 };
 
 export const getCards = async (): Promise<Response<CardResponse>> => {
-	const url = '/cards?page=1&pageSize=9&type=minion&rarity=legendary';
+	const url = '/cards?page=2&pageSize=9&type=minion&class=hunter';
 	const response = await client(url);
 
-	const cards: Card[] = response.data.cards.filter(({ image }) => image).map(
-		({ id, name, health, attack, image, text, flavorText, rarity }) => ({
-			id,
-			name,
-			health,
-			attack,
-			image,
-			text,
-			flavorText,
-			rarity,
-		}),
-	);
+	const cards: Card[] = response.data.cards
+		.filter(({ image }) => image)
+		.map(
+			({
+				id,
+				name,
+				health,
+				attack,
+				manaCost,
+				image,
+				text,
+				flavorText,
+				rarityId,
+				classId,
+			}) => ({
+				id,
+				name,
+				health,
+				attack,
+				manaCost,
+				image,
+				text,
+				flavorText,
+				rarityId,
+				classId,
+			}),
+		);
 
 	return createResponse<CardResponse>({
 		...response.data,
