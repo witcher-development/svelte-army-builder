@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { navigateTo } from 'svelte-router-spa';
-	import { charactersStore, login } from '../store';
+	import { charactersStore, login, setLoading } from '../store';
 
 	onMount(() => {
 		console.log('Login mounted');
@@ -12,9 +12,10 @@
 	});
 
 	const onClickHero = async (id: number) => {
+		setLoading(true);
 		const response = await login(id);
+
 		if (response) {
-			console.log('fired');
 			navigateTo('/');
 		} else {
 			alert('Error')

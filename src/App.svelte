@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
-	import { Router, navigateTo } from 'svelte-router-spa';
+	import { Router } from 'svelte-router-spa';
 
 	import Loader from './components/Loader.svelte';
 	import Login from './components/Login.svelte';
-	import Desk from './components/Desk.svelte';
+	import Desk from './components/Desk/index.svelte';
 
 	import { authStore, loadingStore } from './store';
 
@@ -16,10 +16,7 @@
 			name: '/',
 			component: Desk,
 			onlyIf: {
-				guard: () => {
-					console.log('desk guard', get(authStore).token);
-					return get(authStore).token;
-				},
+				guard: () => get(authStore).token,
 				redirect: '/login',
 			},
 		},
@@ -27,20 +24,11 @@
 			name: '/login',
 			component: Login,
 			onlyIf: {
-				guard: () => {
-					console.log('login guard', !get(authStore).token);
-					return !get(authStore).token;
-				},
+				guard: () => !get(authStore).token,
 				redirect: '/',
 			},
 		},
 	];
-
-	// onMount(() => {
-	// 	if (!$authStore) {
-	// 		navigateTo('/login');
-	// 	}
-	// });
 </script>
 
 <style type="text/scss">

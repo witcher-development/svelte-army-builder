@@ -1,9 +1,10 @@
 import axois from 'axios';
-import { Player, Response, Token } from './types';
+import { Player, Response, Token, Card, CardResponse } from './types';
+import { getPlayerInitState } from './initStates';
 import authData from '../api_key.json';
 
 const authUrl = `https://eu.battle.net/oauth/token?client_id=${authData.id}&client_secret=${authData.secret}&grant_type=client_credentials`;
-const baseURL = 'https://eu.api.blizzard.com/data/hearthstone/';
+const baseURL = 'https://eu.api.blizzard.com/hearthstone/';
 let token = '';
 
 const client = axois.create({
@@ -58,13 +59,20 @@ const getPlayers = async (): Promise<Player[]> => {
 		resolve(JSON.parse(localStorage.getItem('app.players') || '[]'));
 	});
 };
+const getPlayerById = async (id: number): Promise<Player | undefined> => {
+	const playersDB: Player[] = await getPlayers();
+
+	return playersDB.find((player) => id === player.id);
+};
 
 export const getFreeId = async (): Promise<number> => {
 	const playersDB = await getPlayers();
-	return playersDB[playersDB.length - 1].id + 1;
+	return playersDB.length ? playersDB[playersDB.length - 1].id + 1 : 1;
 };
 
-export const auth = async (characterId: number): Promise<Response<Player | null>> => {
+export const auth = async (
+	characterId: number,
+): Promise<Response<Player | null>> => {
 	const playersDB: Player[] = await getPlayers();
 
 	if (!playersDB.length) return createResponse<null>(null, 'db is empty');
@@ -74,17 +82,46 @@ export const auth = async (characterId: number): Promise<Response<Player | null>
 	if (!player) return createResponse<null>(null, 'not found');
 
 	player.token = createUserToken();
+	player.characterId = characterId;
 	return createResponse<Player>(player);
 };
 
-export const createPlayer = async (player: Player): Promise<Response<Player | null>> => {
-	const playersDB: Player[] = await getPlayers();
+export const createPlayer = async (
+	characterId: number,
+): Promise<Response<Player>> => {
+	const playersDB = await getPlayers();
 
-	if (playersDB.find(({ id }) => id === player.id))
-		return createResponse<null>(null, 'already exist');
+	const playerTemplate: Player = getPlayerInitState();
+	const player: Player = Object.assign(playerTemplate, {
+		id: await getFreeId(),
+		characterId,
+	});
 
 	localStorage.setItem('app.players', JSON.stringify([...playersDB, player]));
 
 	player.token = createUserToken();
 	return createResponse<Player>(player);
+};
+
+export const getCards = async (): Promise<Response<CardResponse>> => {
+	const url = '/cards?page=1&pageSize=9&type=minion&rarity=legendary';
+	const response = await client(url);
+
+	const cards: Card[] = response.data.cards.filter(({ image }) => image).map(
+		({ id, name, health, attack, image, text, flavorText, rarity }) => ({
+			id,
+			name,
+			health,
+			attack,
+			image,
+			text,
+			flavorText,
+			rarity,
+		}),
+	);
+
+	return createResponse<CardResponse>({
+		...response.data,
+		cards,
+	});
 };

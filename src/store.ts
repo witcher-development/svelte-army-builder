@@ -1,6 +1,7 @@
 import { readable, writable, derived, get } from 'svelte/store';
 import { auth, getFreeId, createPlayer } from './client';
-import { Player, Response, Token } from './types';
+import { Player, Response, Token, Card } from './types';
+import { getPlayerInitState } from './initStates';
 
 // @ts-ignore
 import Jaina from 'assets/players/Jaina.png';
@@ -33,16 +34,10 @@ const initCharactersState: Character[] = [
 ];
 const charactersStore = readable(initCharactersState, () => {});
 
-const playerInitState: Player = {
-	id: 0,
-	characterId: 0,
-	token: false,
-	deck: [],
-};
 const playerFromStorage = JSON.parse(
 	localStorage.getItem('app.player') || 'null',
 );
-const playerStore = writable(playerFromStorage || playerInitState);
+const playerStore = writable(playerFromStorage || getPlayerInitState());
 
 interface Auth {
 	token: Token;
@@ -59,32 +54,44 @@ const authStore = derived(playerStore, (player) => {
 		return initAuthState;
 	}
 });
-console.log(get(authStore));
 
 const login = async (characterId: number): Promise<boolean> => {
 	const response: Response<Player | null> = await auth(characterId);
 
-	let player = get(playerStore);
+	let player = response.data;
 
 	if (!response.status) {
-		if (response.message === 'db is empty') {
-			player.id = 1;
-		}
-		if (response.message === 'not found') {
-			player.id = await getFreeId();
-		}
+		player = (await createPlayer(characterId)).data;
 	}
 
-	player.characterId = characterId;
-
-	const playerResponse = await createPlayer(player);
-	player = playerResponse.data;
-
 	localStorage.setItem('app.player', JSON.stringify(player));
+	playerStore.set(player);
 
 	return true;
 };
 
-const loadingStore = writable(false);
+const logout = () => {
+	playerStore.set(getPlayerInitState());
+	localStorage.setItem('app.player', '');
+};
 
-export { loadingStore, authStore, charactersStore, playerStore, login };
+const loadingStore = writable(false);
+const setLoading = (value: boolean) => loadingStore.set(value);
+
+const cardsInitState: Card[] = [];
+const cardsStore = writable(cardsInitState);
+const setCards = (cards: Card[]) => {
+	cardsStore.set(cards);
+};
+
+export {
+	loadingStore,
+	authStore,
+	charactersStore,
+	playerStore,
+	login,
+	logout,
+	setLoading,
+	cardsStore,
+	setCards,
+};
