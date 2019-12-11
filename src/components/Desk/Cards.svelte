@@ -1,14 +1,8 @@
 <script lang="ts">
-	import { Card as CardI } from '../../types';
+	import { get } from 'svelte/store';
 	import { cardsStore } from '../../store';
 	import Card from './Card.svelte';
 
-	let cards: CardI[];
-
-	cardsStore.subscribe((storeCards) => {
-		console.log(storeCards);
-		cards = storeCards;
-	});
 </script>
 
 <style type="text/scss">
@@ -22,7 +16,6 @@
 		}
 
 		width: 100%;
-		height: 100%;
 
 		border-radius: 13px;
 		box-shadow: 0 10px 10px 10px rgba(0, 0, 0, 0.8);
@@ -44,6 +37,13 @@
 			flex-wrap: wrap;
 
 			padding: 37px 30px;
+
+			li {
+				margin-right: 10px;
+				&:nth-child(3n) {
+					margin-right: 0;
+				}
+			}
 		}
 	}
 </style>
@@ -52,8 +52,10 @@
 	<h2 class="cards__title">All cards</h2>
 	<div class="cards">
 		<ul class="cards__list">
-			{#each cards as card}
-				<Card {...card} />
+			{#each $cardsStore as card}
+				<li>
+					<Card {...card} />
+				</li>
 			{/each}
 		</ul>
 	</div>

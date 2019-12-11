@@ -2,7 +2,7 @@
 	import { tick } from 'svelte';
 	import { get } from 'svelte/store';
 	import { navigateTo } from 'svelte-router-spa';
-	import { logout, playerStore, getClassNameById } from '../../store';
+	import { logout, playerStore, getClassNameById, getCharacterNameById } from '../../store';
 
 	const onClickLogout = () => {
 		logout();
@@ -10,6 +10,10 @@
 	};
 
 	let name;
+	$: name = getCharacterNameById(get(playerStore).characterId);
+
+	let className;
+	$: className = getClassNameById(get(playerStore).classId);
 
 </script>
 
@@ -23,6 +27,25 @@
 		height: 100px;
 
 		padding: 0 40px 25px;
+
+		p {
+			margin-top: 23px;
+
+			color: #e0e0e0;
+			font-size: 23px;
+
+			span {
+				&.hunter {
+					color: #8BC951;
+				}
+				&.druid {
+					color: #FE9536;
+				}
+				&.mage {
+					color: #B2DFE9;
+				}
+			}
+		}
 
 		a {
 			color: #616161;
@@ -52,6 +75,9 @@
 </style>
 
 <header class="header">
-	<p>{get(playerStore).name}: {getClassNameById(get(playerStore).classId)}</p>
+	<p>
+    {name}:
+		<span class={className.toLowerCase()}>{className}</span>
+	</p>
 	<a on:click|preventDefault={onClickLogout}>logout</a>
 </header>

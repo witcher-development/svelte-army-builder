@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { get } from 'svelte/store';
-	import { classesStore, getClassNameById } from '../../store';
+	import {
+		getClassNameById,
+		playerStore,
+		dragStore,
+		setDrag,
+	} from '../../store';
 
 	export let id;
 	export let name;
@@ -13,11 +18,29 @@
 	export let rarityId;
 	export let classId;
 
+	export let isDeckCard = false;
+
 	let imageVar;
 	$: imageVar = `url(${image})`;
 
 	let className;
 	$: className = getClassNameById(classId);
+
+	let playerClass;
+	$: playerClass = getClassNameById(get(playerStore).classId);
+
+	const onMouseMove = (e) => console.log(e);
+
+	let isDragged = false;
+	$: !$dragStore.isDragOn && (isDragged = false);
+	const dragStart = () => {
+		isDragged = true;
+
+		setDrag({
+			isDragOn: true,
+			cardId: id,
+		});
+	};
 </script>
 
 <style type="text/scss">
@@ -29,9 +52,8 @@
 		width: 130px;
 		height: 200px;
 
-		margin-right: 10px;
-		&:nth-child(3n) {
-			margin-right: 0;
+		&_dragged {
+			opacity: 0.6;
 		}
 
 		img {
@@ -146,36 +168,64 @@
 				color: #4a4dad;
 			}
 		}
+
+		&__class {
+			padding: 4px 10px;
+
+			font-size: 19px;
+			font-family: 'Belwe Bold', sans-serif;
+
+			&.hunter {
+				color: #8bc951;
+			}
+			&.druid {
+				color: #fe9536;
+			}
+			&.mage {
+				color: #b2dfe9;
+			}
+		}
 	}
 </style>
 
-<li class={'card card_rarity' + rarityId} style="--bgi:{imageVar}">
-	<div class="card__popup">
-		<div class="card__popup-bgi" />
+<div
+	class="card {rarityId ? `card_rarity${rarityId}` : ''}
+	{isDragged ? 'card_dragged' : ''}"
+	style="--bgi:{imageVar}"
+	on:mousedown={() => dragStart()}>
 
-		<h3>{name}</h3>
-		<div class="card__stats">
-			<ul>
-				<li class="card__stats_health">
-					<span>Health</span>
-					: {health}
-				</li>
-				<li class="card__stats_attack">
-					<span>Attack</span>
-					: {attack}
-				</li>
-				<li class="card__stats_mana">
-					<span>Mana &nbsp;</span>
-					: {manaCost}
-				</li>
-			</ul>
-			<div class="card__class">{className}</div>
+	{#if !isDragged}
+		<div class="card__popup">
+			<div class="card__popup-bgi" />
+
+			<h3>{name}</h3>
+			<div class="card__stats">
+				<ul>
+					<li class="card__stats_health">
+						<span>Health</span>
+						: {health}
+					</li>
+					<li class="card__stats_attack">
+						<span>Attack</span>
+						: {attack}
+					</li>
+					<li class="card__stats_mana">
+						<span>Mana &nbsp;</span>
+						: {manaCost}
+					</li>
+				</ul>
+				<h4
+					class="card__class {className === playerClass ? className.toLowerCase() : ''}">
+					{className}
+				</h4>
+			</div>
+
+			<p>
+				{@html text}
+			</p>
+			<p>{flavorText}</p>
 		</div>
+	{/if}
 
-		<p>
-			{@html text}
-		</p>
-		<p>{flavorText}</p>
-	</div>
-	<img src={image} alt={name} />
-</li>
+	<img src={image} alt={name} draggable="false" />
+</div>

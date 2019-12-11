@@ -34,6 +34,13 @@ const initCharactersState: Character[] = [
 ];
 const charactersStore = readable(initCharactersState, () => {});
 
+const getCharacterNameById = (characterId: number): string => {
+	const characterObject = get(charactersStore).find(
+		({ id }) => id === characterId,
+	);
+	return characterObject ? characterObject.name : '';
+};
+
 const classesInitState = [
 	{
 		id: 2,
@@ -78,7 +85,7 @@ const classesInitState = [
 ];
 const classesStore = readable(classesInitState, () => {});
 
-export const getClassNameById = (classId: number): string => {
+const getClassNameById = (classId: number): string => {
 	const classObject = get(classesStore).find(({ id }) => id === classId);
 	return classObject ? classObject.name : 'All classes';
 };
@@ -87,6 +94,9 @@ const playerFromStorage = JSON.parse(
 	localStorage.getItem('app.player') || 'null',
 );
 const playerStore = writable(playerFromStorage || getPlayerInitState());
+const setDeck = (deck: Card[]) => {
+	playerStore.update(store => ({...store, deck}))
+};
 
 interface Auth {
 	token: Token;
@@ -132,16 +142,46 @@ const cardsStore = writable(cardsInitState);
 const setCards = (cards: Card[]) => {
 	cardsStore.set(cards);
 };
+const getCardImageById = (cardId: number): string | void => {
+	const card: Card = get(cardsStore).find(({ id }) => cardId === id);
+
+	if (card) return card.image;
+
+	alert('Card not found');
+};
+
+interface Drag {
+	isDragOn: boolean;
+	cardId: number;
+}
+const dragInitState: Drag = {
+	isDragOn: false,
+	cardId: 0,
+};
+const dragStore = writable(dragInitState);
+const setDrag = (anyPartOfDrag: any) => {
+	dragStore.update((drag) => ({...drag, ...anyPartOfDrag}));
+};
+const resetDrag = () => {
+	dragStore.set(dragInitState);
+};
 
 export {
 	loadingStore,
 	authStore,
 	charactersStore,
+	getCharacterNameById,
 	classesStore,
+	getClassNameById,
 	playerStore,
+	setDeck,
 	login,
 	logout,
 	setLoading,
 	cardsStore,
 	setCards,
+	getCardImageById,
+	dragStore,
+	setDrag,
+	resetDrag,
 };
