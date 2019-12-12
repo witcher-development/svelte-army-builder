@@ -4,7 +4,6 @@
 		getClassNameById,
 		playerStore,
 		dragStore,
-		setDrag,
 	} from '../../store';
 
 	export let id;
@@ -29,18 +28,8 @@
 	let playerClass;
 	$: playerClass = getClassNameById(get(playerStore).classId);
 
-	const onMouseMove = (e) => console.log(e);
-
-	let isDragged = false;
-	$: !$dragStore.isDragOn && (isDragged = false);
-	const dragStart = () => {
-		isDragged = true;
-
-		setDrag({
-			isDragOn: true,
-			cardId: id,
-		});
-	};
+	let isDragged;
+	$: isDragged = !$dragStore.cardId === id;
 </script>
 
 <style type="text/scss">
@@ -49,8 +38,8 @@
 	}
 
 	.card {
-		width: 130px;
-		height: 200px;
+		width: 100%;
+		height: 100%;
 
 		&_dragged {
 			opacity: 0.6;
@@ -63,9 +52,14 @@
 
 		&__popup {
 			position: fixed;
+			z-index: 10;
 			top: 50%;
 			left: 54%;
 			transform: translateY(-50%);
+
+			&.left-side {
+				left: 7.4%;
+			}
 
 			width: 450px;
 			height: 700px;
@@ -192,10 +186,10 @@
 	class="card {rarityId ? `card_rarity${rarityId}` : ''}
 	{isDragged ? 'card_dragged' : ''}"
 	style="--bgi:{imageVar}"
-	on:mousedown={() => dragStart()}>
+	data-card-id={id}>
 
 	{#if !isDragged}
-		<div class="card__popup">
+		<div class="card__popup {isDeckCard ? 'left-side' : ''}">
 			<div class="card__popup-bgi" />
 
 			<h3>{name}</h3>

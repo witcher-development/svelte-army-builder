@@ -1,14 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
 	import { getCards } from '../../client';
 	import {
 		setLoading,
 		setCards,
 		dragStore,
-		resetDrag,
+		dragNodeCoorsStore,
 		getCardImageById,
 	} from '../../store';
+	import {
+		setDragDropHandlers,
+		removeDragDropHandlers,
+	} from '../../dragDropBus';
 
 	import Header from './Header.svelte';
 	import Cards from './Cards.svelte';
@@ -22,39 +25,17 @@
 
 		setLoading(false);
 
-		const onMouseUp = () => {
-			if (get(dragStore).isDragOn) {
-				resetDrag();
-			}
-		};
-
-		document.addEventListener('mouseup', onMouseUp);
+		setDragDropHandlers();
 
 		return () => {
-			document.removeEventListener('mouseup', onMouseUp);
+			removeDragDropHandlers();
 		};
 	});
 
 	let imageVar;
-	let dragElementPosition = {
-		x: -100,
-		y: -100,
-	};
-
-	const onMouseMove = (e) => {
-		dragElementPosition.x = e.clientX;
-		dragElementPosition.y = e.clientY;
-	};
-
-	dragStore.subscribe(({ isDragOn, cardId }) => {
-		if (isDragOn) {
-			imageVar = `url(${getCardImageById(cardId)})`;
-
-			document.addEventListener('mousemove', onMouseMove);
-		} else {
-			document.removeEventListener('mousemove', onMouseMove);
-		}
-	});
+	$: imageVar = $dragStore.isDragOn
+		? `url(${getCardImageById($dragStore.cardId)})`
+		: '';
 </script>
 
 <style type="text/scss">
@@ -83,7 +64,6 @@
 
 		&__drag {
 			position: fixed;
-			z-index: -10;
 			transform: translate(-50%, -50%);
 
 			width: 100px;
@@ -106,7 +86,7 @@
 				transform: scale(0.8);
 				box-shadow: 0 7px 15px 15px rgba(0, 0, 0, 0.5);
 
-        border-radius: 10px;
+				border-radius: 10px;
 			}
 		}
 	}
@@ -123,6 +103,6 @@
 	{#if $dragStore.isDragOn}
 		<div
 			class="desk__drag"
-			style="--bgi:{imageVar}; top: {dragElementPosition.y}px; left: {dragElementPosition.x}px;" />
+			style="--bgi:{imageVar}; top: {$dragNodeCoorsStore.y}px; left: {$dragNodeCoorsStore.x}px;" />
 	{/if}
 </div>

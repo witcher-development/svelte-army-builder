@@ -1,14 +1,14 @@
 export interface Card {
 	id: number;
-	name: string;
-	health: number;
-	attack: number;
-	manaCost: number;
-	image: string;
-	text: string;
-	flavorText: string;
-	rarityId: number;
-	classId: number;
+	name?: string;
+	health?: number;
+	attack?: number;
+	manaCost?: number;
+	image?: string;
+	text?: string;
+	flavorText?: string;
+	rarityId?: number;
+	classId?: number;
 }
 
 export interface CardResponse {
@@ -23,7 +23,7 @@ export interface Player {
 	characterId: number;
 	token: Token;
 	classId: number;
-	deck: Card[];
+	deck: Array<Card | null>;
 }
 
 export interface Response<T> {

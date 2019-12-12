@@ -94,8 +94,16 @@ const playerFromStorage = JSON.parse(
 	localStorage.getItem('app.player') || 'null',
 );
 const playerStore = writable(playerFromStorage || getPlayerInitState());
-const setDeck = (deck: Card[]) => {
-	playerStore.update(store => ({...store, deck}))
+const setCard = (index: number, card: Card) => {
+	playerStore.update((store) => {
+		const deck = [...store.deck];
+		deck[index] = card;
+
+		return {
+			...store,
+			deck,
+		};
+	});
 };
 
 interface Auth {
@@ -159,11 +167,27 @@ const dragInitState: Drag = {
 	cardId: 0,
 };
 const dragStore = writable(dragInitState);
-const setDrag = (anyPartOfDrag: any) => {
-	dragStore.update((drag) => ({...drag, ...anyPartOfDrag}));
+const setDrag = (partOfDrag: Partial<Drag>) => {
+	dragStore.update((drag) => ({ ...drag, ...partOfDrag }));
 };
 const resetDrag = () => {
 	dragStore.set(dragInitState);
+};
+
+interface DragNodeCoors {
+	x: number;
+	y: number;
+}
+const dragNodeInitCoors: DragNodeCoors = {
+	x: -100,
+	y: -100,
+};
+const dragNodeCoorsStore = writable(dragNodeInitCoors);
+const setDragNodeCoors = (coors: DragNodeCoors) => {
+	dragNodeCoorsStore.set(coors);
+};
+const resetDragNodeCoors = () => {
+	dragNodeCoorsStore.set(dragNodeInitCoors);
 };
 
 export {
@@ -174,7 +198,7 @@ export {
 	classesStore,
 	getClassNameById,
 	playerStore,
-	setDeck,
+	setCard,
 	login,
 	logout,
 	setLoading,
@@ -184,4 +208,7 @@ export {
 	dragStore,
 	setDrag,
 	resetDrag,
+	dragNodeCoorsStore,
+	setDragNodeCoors,
+	resetDragNodeCoors,
 };

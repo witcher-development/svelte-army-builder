@@ -39,6 +39,9 @@
 			padding: 37px 30px;
 
 			li {
+				width: 130px;
+				height: 200px;
+
 				margin-right: 10px;
 				&:nth-child(3n) {
 					margin-right: 0;

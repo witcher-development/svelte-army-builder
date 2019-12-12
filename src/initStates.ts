@@ -5,5 +5,5 @@ export const getPlayerInitState = (): Player => ({
 	characterId: 0,
 	token: false,
 	classId: 0,
-	deck: [],
+	deck: [...Array(4)].map(() => null),
 });
