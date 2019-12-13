@@ -186,7 +186,8 @@
 	class="card {rarityId ? `card_rarity${rarityId}` : ''}
 	{isDragged ? 'card_dragged' : ''}"
 	style="--bgi:{imageVar}"
-	data-card-id={id}>
+	data-card-id={id}
+	data-deck-card={isDeckCard}>
 
 	{#if !isDragged}
 		<div class="card__popup {isDeckCard ? 'left-side' : ''}">

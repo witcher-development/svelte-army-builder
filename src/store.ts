@@ -1,6 +1,6 @@
 import { readable, writable, derived, get } from 'svelte/store';
 import { auth, getFreeId, createPlayer } from './client';
-import { Player, Response, Token, Card } from './types';
+import { Player, Response, Token, Card, Deck } from './types';
 import { getPlayerInitState } from './initStates';
 
 // @ts-ignore
@@ -96,8 +96,32 @@ const playerFromStorage = JSON.parse(
 const playerStore = writable(playerFromStorage || getPlayerInitState());
 const setCard = (index: number, card: Card) => {
 	playerStore.update((store) => {
-		const deck = [...store.deck];
+		const deck: Deck = [...store.deck];
+
+		const isAlreadyExistsIndex = deck.findIndex(
+			(deckCard) => deckCard && deckCard.id === card.id,
+		);
+
+		if (deck[index] && isAlreadyExistsIndex !== -1) {
+			deck[isAlreadyExistsIndex] = deck[index];
+		} else if (isAlreadyExistsIndex !== -1) {
+			deck[isAlreadyExistsIndex] = null;
+		}
+
 		deck[index] = card;
+
+		return {
+			...store,
+			deck,
+		};
+	});
+};
+const removeCard = (id: number) => {
+	playerStore.update((store) => {
+		const deck: Deck = [...store.deck];
+		const index = deck.findIndex((card) => card && card.id === id);
+
+		deck[index] = null;
 
 		return {
 			...store,
@@ -161,10 +185,12 @@ const getCardImageById = (cardId: number): string | void => {
 interface Drag {
 	isDragOn: boolean;
 	cardId: number;
+	dragFromDeck: boolean;
 }
 const dragInitState: Drag = {
 	isDragOn: false,
 	cardId: 0,
+	dragFromDeck: false,
 };
 const dragStore = writable(dragInitState);
 const setDrag = (partOfDrag: Partial<Drag>) => {
@@ -199,6 +225,7 @@ export {
 	getClassNameById,
 	playerStore,
 	setCard,
+	removeCard,
 	login,
 	logout,
 	setLoading,

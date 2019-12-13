@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { playerStore, dragStore } from '../../store';
-
 	import Card from './Card.svelte';
 </script>
 

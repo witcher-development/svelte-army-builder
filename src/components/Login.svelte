@@ -3,14 +3,6 @@
 	import { navigateTo } from 'svelte-router-spa';
 	import { charactersStore, login, setLoading } from '../store';
 
-	onMount(() => {
-		console.log('Login mounted');
-
-		return () => {
-			console.log('Login unmounted');
-		};
-	});
-
 	const onClickHero = async (id: number) => {
 		setLoading(true);
 		const response = await login(id);

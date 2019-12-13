@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { get } from 'svelte/store';
-	import { cardsStore } from '../../store';
+	import { cardsStore, dragStore } from '../../store';
 	import Card from './Card.svelte';
-
 </script>
 
 <style type="text/scss">
@@ -48,6 +47,16 @@
 				}
 			}
 		}
+
+		&__drop-target {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 100;
+
+			width: 100%;
+			height: 100%;
+		}
 	}
 </style>
 
@@ -62,4 +71,7 @@
 			{/each}
 		</ul>
 	</div>
+	{#if $dragStore.dragFromDeck}
+		<div class="cards__drop-target"></div>
+	{/if}
 </div>

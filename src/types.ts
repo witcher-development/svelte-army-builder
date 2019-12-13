@@ -18,12 +18,14 @@ export interface CardResponse {
 	pageCount: number;
 }
 
+export type Deck = Array<Card | null>;
+
 export interface Player {
 	id: number;
 	characterId: number;
 	token: Token;
 	classId: number;
-	deck: Array<Card | null>;
+	deck: Deck;
 }
 
 export interface Response<T> {
