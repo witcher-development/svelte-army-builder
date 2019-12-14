@@ -57,7 +57,7 @@
 
 <div class="app">
 	<img src={logo} alt="logo" />
-  {#if $loadingStore}
+  {#if loadingStore.$state}
 		<Loader />
   {/if}
 	<Router {routes} />

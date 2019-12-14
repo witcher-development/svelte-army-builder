@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { get } from 'svelte/store';
-	import { cardsStore, dragStore } from '../../store';
+	import { cardsStore, dragStore } from '../../store/store';
 	import Card from './Card.svelte';
 </script>
 

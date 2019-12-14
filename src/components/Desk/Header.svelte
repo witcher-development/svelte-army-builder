@@ -2,7 +2,7 @@
 	import { tick } from 'svelte';
 	import { get } from 'svelte/store';
 	import { navigateTo } from 'svelte-router-spa';
-	import { logout, playerStore, getClassNameById, getCharacterNameById } from '../../store';
+	import { logout, playerStore, getClassNameById, getCharacterNameById } from '../../store/store';
 
 	const onClickLogout = () => {
 		logout();

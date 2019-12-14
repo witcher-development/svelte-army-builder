@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import { navigateTo } from 'svelte-router-spa';
-	import { charactersStore, login, setLoading } from '../store';
+	import { charactersStore, login, setLoading } from '../store/store';
 
 	const onClickHero = async (id: number) => {
 		setLoading(true);

@@ -1,5 +1,6 @@
 import { get } from 'svelte/store';
 import {
+	dragDropStore,
 	dragStore,
 	setDrag,
 	resetDrag,
@@ -9,6 +10,8 @@ import {
 	setCard,
 	removeCard,
 } from './store';
+
+const {} = dragDropStore;
 
 const onMouseDown = (e) => {
 	const cardNode = e.path.find(

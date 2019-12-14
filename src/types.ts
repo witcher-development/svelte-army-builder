@@ -19,13 +19,12 @@ export interface CardResponse {
 }
 
 export type Deck = Array<Card | null>;
+export type DeckForStorage = Array<number | null>;
 
 export interface Player {
 	id: number;
 	characterId: number;
-	token: Token;
 	classId: number;
-	deck: Deck;
 }
 
 export interface Response<T> {
@@ -34,4 +33,7 @@ export interface Response<T> {
 	data: T;
 }
 
-export type Token = boolean;
+export interface Token {
+	playerId: number;
+	token: boolean;
+}

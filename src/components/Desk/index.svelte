@@ -1,17 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getCards } from '../../client';
+	import { getCards } from '../../server';
 	import {
 		setLoading,
 		setCards,
 		dragStore,
 		dragNodeCoorsStore,
 		getCardImageById,
-	} from '../../store';
+	} from '../../store/store';
 	import {
 		setDragDropHandlers,
 		removeDragDropHandlers,
 	} from '../../dragDropBus';
+	import { CardResponse, Response } from '../../types';
 
 	import Header from './Header.svelte';
 	import Cards from './Cards.svelte';
@@ -20,7 +21,7 @@
 	onMount(async () => {
 		setLoading(true);
 
-		const cards = await getCards();
+		const cards: Response<CardResponse> = await getCards();
 		setCards(cards.data.cards);
 
 		setLoading(false);

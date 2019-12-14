@@ -4,7 +4,7 @@
 		getClassNameById,
 		playerStore,
 		dragStore,
-	} from '../../store';
+	} from '../../store/store';
 
 	export let id;
 	export let name;
