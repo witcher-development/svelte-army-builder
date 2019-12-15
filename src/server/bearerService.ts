@@ -1,6 +1,8 @@
-import { Token } from "../types/server";
+import { Token } from '../types/server';
 
-const createUserToken = (playerId: number): Token => {
+import { getPlayerById } from './playerService';
+
+export const createUserToken = (playerId: number): Token => {
 	const today = new Date();
 	const expiredDate = new Date(today);
 	expiredDate.setDate(expiredDate.getDate() + 1);
@@ -8,9 +10,19 @@ const createUserToken = (playerId: number): Token => {
 	return {
 		playerId,
 		token: true,
-		expiredDate
-	}
+		expiredDate,
+	};
 };
-const verifyUserToken = (token: Token): boolean => {
-	return token;
+export const verifyUserToken = (token: Token): boolean => {
+	if (!token.expiredDate) return false;
+
+	const now = new Date();
+	const fresh = now < token.expiredDate;
+
+	const player = getPlayerById(token.playerId);
+	const exists = !!player;
+
+	const rightToken = token.token;
+
+	return fresh && exists && rightToken;
 };

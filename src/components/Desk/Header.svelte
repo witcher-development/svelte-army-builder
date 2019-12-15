@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { tick } from 'svelte';
-	import { get } from 'svelte/store';
 	import { navigateTo } from 'svelte-router-spa';
-	import { logout, playerStore, getClassNameById, getCharacterNameById } from '../../store/store';
+
+	import { logout } from '../../store/auth';
+	import { getState as getPlayer } from '../../store/player'
+	import { getClassNameById } from '../../store/classes';
+	import { getCharacterNameById } from '../../store/characters';
 
 	const onClickLogout = () => {
 		logout();
@@ -10,10 +12,10 @@
 	};
 
 	let name;
-	$: name = getCharacterNameById(get(playerStore).characterId);
+	$: name = getCharacterNameById(getPlayer().characterId);
 
 	let className;
-	$: className = getClassNameById(get(playerStore).classId);
+	$: className = getClassNameById(getPlayer().classId);
 
 </script>
 

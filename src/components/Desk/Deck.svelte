@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { playerStore, dragStore } from '../../store/store';
+	import { state as deck } from '../../store/deck';
+	import { state as drag } from '../../store/dragDrop';
+
 	import Card from './Card.svelte';
 </script>
 
@@ -62,12 +64,12 @@
 	<h2 class="deck__title">Your deck</h2>
 	<div class="deck">
 		<ul class="deck__list">
-			{#each $playerStore.deck as card, i}
+			{#each $deck as card, i}
 				<li class="deck__card">
 					{#if card}
 						<Card {...card} isDeckCard />
 					{/if}
-					{#if $dragStore.isDragOn}
+					{#if $drag.isDragOn}
 						<div class="deck__card-drop-target" data-deck-index={i}></div>
 					{/if}
 				</li>

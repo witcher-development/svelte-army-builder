@@ -6,8 +6,8 @@ export const createResponse = <T>(data: T, message?: string): Response<T> => ({
 	message,
 });
 
-export const akaDBRequest = (payload): Promise<any> => {
-	return new Promise((resolve, reject) => {
+export const akaDBRequest = <T>(payload): Promise<T> => {
+	return new Promise<T>((resolve, reject) => {
 		setTimeout(() => {
 			payload(resolve, reject);
 		}, 1000);

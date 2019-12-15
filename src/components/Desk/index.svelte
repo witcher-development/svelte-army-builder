@@ -1,18 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getCards } from '../../server';
-	import {
-		setLoading,
-		setCards,
-		dragStore,
-		dragNodeCoorsStore,
-		getCardImageById,
-	} from '../../store/store';
+
+	import { setLoading } from '../../store/loading';
+	import { fetchCards, getCardImageById } from '../../store/cards';
+	import { fetchPlayer } from '../../store/player';
+	import { fetchDeck } from '../../store/deck';
+
+	import { state as drag } from '../../store/dragDrop';
+	import { state as dragNode } from '../../store/dragNode';
+
 	import {
 		setDragDropHandlers,
 		removeDragDropHandlers,
 	} from '../../dragDropBus';
-	import { CardResponse, Response } from '../../types';
 
 	import Header from './Header.svelte';
 	import Cards from './Cards.svelte';
@@ -21,8 +21,9 @@
 	onMount(async () => {
 		setLoading(true);
 
-		const cards: Response<CardResponse> = await getCards();
-		setCards(cards.data.cards);
+		await fetchCards();
+		await fetchPlayer();
+		await fetchDeck();
 
 		setLoading(false);
 
@@ -34,9 +35,9 @@
 	});
 
 	let imageVar;
-	$: imageVar = $dragStore.isDragOn
-		? `url(${getCardImageById($dragStore.cardId)})`
-		: '';
+	$: imageVar = $drag.isDragOn ? `url(${getCardImageById($drag.cardId)})` : '';
+
+	let style = `--bgi:${imageVar}; top: ${$dragNode.y}px; left: ${$dragNode.x}px;`;
 </script>
 
 <style type="text/scss">
@@ -101,9 +102,7 @@
 		<Deck />
 	</div>
 
-	{#if $dragStore.isDragOn}
-		<div
-			class="desk__drag"
-			style="--bgi:{imageVar}; top: {$dragNodeCoorsStore.y}px; left: {$dragNodeCoorsStore.x}px;" />
+	{#if $drag.isDragOn}
+		<div class="desk__drag" {style} />
 	{/if}
 </div>

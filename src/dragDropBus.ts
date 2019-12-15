@@ -1,17 +1,12 @@
-import { get } from 'svelte/store';
 import {
-	dragDropStore,
-	dragStore,
+	state as drag,
+	getState as getDrag,
 	setDrag,
 	resetDrag,
-	setDragNodeCoors,
-	resetDragNodeCoors,
-	cardsStore,
-	setCard,
-	removeCard,
-} from './store';
-
-const {} = dragDropStore;
+} from './store/dragDrop';
+import { setDragNodeCoors, resetDragNodeCoors } from './store/dragNode';
+import { getState as getCards } from './store/cards';
+import { setCard, removeCard } from './store/deck';
 
 const onMouseDown = (e) => {
 	const cardNode = e.path.find(
@@ -30,8 +25,8 @@ const onMouseDown = (e) => {
 };
 
 const onDropToDeck = (index: number) => {
-	const cardId = get(dragStore).cardId;
-	const card = get(cardsStore).find(({ id }) => cardId === id);
+	const cardId = getDrag().cardId;
+	const card = getCards().find(({ id }) => cardId === id);
 
 	if (card) {
 		setCard(index, card);
@@ -41,12 +36,12 @@ const onDropToDeck = (index: number) => {
 };
 
 const onDropOut = () => {
-	const id = get(dragStore).cardId;
+	const id = getDrag().cardId;
 	removeCard(id);
 };
 
 const onMouseUp = ({ target }) => {
-	if (get(dragStore).isDragOn) {
+	if (getDrag().isDragOn) {
 		if (target.classList.contains('deck__card-drop-target')) {
 			const targetIndex = +target.getAttribute('data-deck-index');
 			onDropToDeck(targetIndex);
@@ -54,7 +49,7 @@ const onMouseUp = ({ target }) => {
 
 		if (
 			target.classList.contains('cards__drop-target') &&
-			get(dragStore).dragFromDeck
+			getDrag().dragFromDeck
 		) {
 			onDropOut();
 		}
@@ -71,7 +66,7 @@ const onMouseMove = (e) => {
 	});
 };
 
-dragStore.subscribe(({ isDragOn }) => {
+drag.subscribe(({ isDragOn }) => {
 	if (isDragOn) {
 		document.addEventListener('mousemove', onMouseMove);
 	} else {

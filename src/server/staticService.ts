@@ -1,4 +1,6 @@
-import { Character, GameClass } from "../types/server";
+import { Character, GameClass } from '../types/server';
+
+import { akaDBRequest } from './helpers';
 
 // @ts-ignore
 import Jaina from 'assets/players/Jaina.png';
@@ -78,6 +80,14 @@ export const getCharacterClass = (characterId: number): number => {
 	return 0;
 };
 
-export const getClasses = () => [...classesDB];
+export const getClasses = async (): Promise<GameClass[]> => {
+	return await akaDBRequest<GameClass[]>((res) => {
+		res([...classesDB]);
+	});
+};
 
-export const getCharacters = () => [...charactersDB];
+export const getCharacters = async (): Promise<Character[]> => {
+	return await akaDBRequest<Character[]>((res) => {
+		res([...charactersDB]);
+	});
+};

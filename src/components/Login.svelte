@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
 	import { navigateTo } from 'svelte-router-spa';
-	import { charactersStore, login, setLoading } from '../store/store';
+	import { state as characters } from '../store/characters';
+	import { login } from '../store/auth';
+	import { setLoading } from '../store/loading';
 
 	const onClickHero = async (id: number) => {
 		setLoading(true);
@@ -179,7 +180,7 @@
 <div class="login">
 	<h1>Choose a hero</h1>
 	<ul class="login__characters">
-		{#each $charactersStore as { id, name, image }}
+		{#each $characters as { id, name, image }}
 			<li class="login__character" on:click={() => onClickHero(id)}>
 				<img src={image} alt={name} />
 				<p>{name}</p>

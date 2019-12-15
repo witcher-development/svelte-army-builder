@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { get } from 'svelte/store';
-	import { cardsStore, dragStore } from '../../store/store';
+	import { state as cards } from '../../store/cards';
+	import { state as drag } from '../../store/dragDrop';
 	import Card from './Card.svelte';
 </script>
 
@@ -64,14 +64,14 @@
 	<h2 class="cards__title">All cards</h2>
 	<div class="cards">
 		<ul class="cards__list">
-			{#each $cardsStore as card}
+			{#each $cards as card}
 				<li>
 					<Card {...card} />
 				</li>
 			{/each}
 		</ul>
 	</div>
-	{#if $dragStore.dragFromDeck}
+	{#if $drag.dragFromDeck}
 		<div class="cards__drop-target"></div>
 	{/if}
 </div>

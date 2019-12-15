@@ -1,6 +1,9 @@
 import { get, writable } from 'svelte/store';
 
 import { Card } from '../types/client';
+import { Response, CardResponse } from '../types/server';
+
+import { getCards } from '../server';
 
 const cardsInitState: Card[] = [];
 export const state = writable(cardsInitState);
@@ -17,4 +20,13 @@ export const getCardImageById = (cardId: number): string | void => {
 	if (card) return card.image;
 
 	alert('Card not found');
+};
+
+export const fetchCards = async (): Promise<Card[]> => {
+	const response: Response<CardResponse> = await getCards();
+
+	const { cards } = response.data;
+
+	setCards(cards);
+	return cards;
 };

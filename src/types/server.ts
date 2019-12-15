@@ -1,10 +1,13 @@
-import { BToken, BPlayer, BCard, BCharacter, BGameClass } from "./base";
+import { BToken, BPlayer, BCard, BCharacter, BGameClass } from './base';
 
 export interface Token extends BToken {}
 export interface Player extends BPlayer {}
 
 export interface Card extends BCard {}
-export type Deck = Array<number | null>;
+export interface Deck {
+	playerId: number;
+	deck: Array<number | null>;
+}
 
 export interface Character extends BCharacter {}
 export interface GameClass extends BGameClass {}

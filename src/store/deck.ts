@@ -1,8 +1,9 @@
 import { get, writable } from 'svelte/store';
 
-import { Card, Deck } from '../types/client';
+import { Card, Deck, Token } from '../types/client';
 import { Deck as ServerDeck } from '../types/server';
-import { setDeck as saveDeck } from '../server';
+import { setDeck as saveDeck, getDeck } from '../server';
+import { getState as getToken } from './auth';
 
 const cardsInDeck = 4;
 const deckInitState: Deck = [...Array(cardsInDeck)].map(() => null);
@@ -44,10 +45,25 @@ export const removeCard = (id: number) => {
 export const updateDeck = (deck: Deck) => {
 	state.set(deck);
 
-	const player = get(state);
+	const token = getToken();
 
-	saveDeck(player.id, player.token, convertDeckForSave(deck));
+	saveDeck(token, convertDeckForSave(deck));
 };
 
-const convertDeckForSave = (deck: Deck): ServerDeck =>
+export const fetchDeck = async (): Promise<Deck | undefined> => {
+	const token: Token = getToken();
+	const response = await getDeck(token);
+
+	const { data: deck, message } = response;
+
+	if (!deck) {
+		alert(message);
+		return;
+	}
+
+	setDeck(deck);
+	return deck;
+};
+
+const convertDeckForSave = (deck: Deck) =>
 	deck.map((card) => (card ? card.id : null));

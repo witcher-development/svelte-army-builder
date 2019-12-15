@@ -1,10 +1,7 @@
 <script lang="ts">
-	import { get } from 'svelte/store';
-	import {
-		getClassNameById,
-		playerStore,
-		dragStore,
-	} from '../../store/store';
+	import { getClassNameById } from '../../store/classes';
+	import { getState as getPlayer } from '../../store/player';
+	import { getState as getDrag } from '../../store/dragDrop';
 
 	export let id;
 	export let name;
@@ -26,10 +23,10 @@
 	$: className = getClassNameById(classId);
 
 	let playerClass;
-	$: playerClass = getClassNameById(get(playerStore).classId);
+	$: playerClass = getClassNameById(getPlayer().classId);
 
 	let isDragged;
-	$: isDragged = !$dragStore.cardId === id;
+	$: isDragged = !getDrag().cardId === id;
 </script>
 
 <style type="text/scss">
