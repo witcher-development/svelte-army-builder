@@ -15,6 +15,8 @@ export const setDeck = (deck: Deck) => {
 	state.set(deck);
 };
 
+export const resetDeck = () => state.set(deckInitState);
+
 export const setCard = (index: number, card: Card) => {
 	const deck: Deck = [...get(state)];
 

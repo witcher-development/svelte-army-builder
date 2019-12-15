@@ -15,6 +15,7 @@ const playerInitState: Player = {
 export const state = writable(playerInitState);
 export const getState = (): Player => get(state);
 export const setPlayer = (player: Player) => state.set(player);
+export const resetPlayer = () => state.set(playerInitState);
 
 export const fetchPlayer = async (): Promise<Player | undefined> => {
 	const token: Token = getToken();

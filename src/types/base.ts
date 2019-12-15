@@ -1,7 +1,7 @@
 export interface BToken {
 	playerId: number;
 	token: boolean;
-	expiredDate: Date | null,
+	expiredDate: string | null,
 }
 
 export interface BPlayer {

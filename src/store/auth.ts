@@ -29,4 +29,5 @@ export const login = async (characterId: number): Promise<Token> => {
 
 export const logout = () => {
 	localStorage.setItem('app.token', '');
+	setToken(tokenInitState);
 };

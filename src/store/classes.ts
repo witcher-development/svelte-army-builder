@@ -8,12 +8,13 @@ export const getState = (): GameClass[] => get(state);
 const setState = (classes: GameClass[]) => state.set(classes);
 
 export const getClassNameById = (classId: number): string => {
-	const classObject = get(state).find(({ id }) => id === classId);
+	const classObject = getState().find(({ id }) => id === classId);
 	return classObject ? classObject.name : 'All classes';
 };
 
 export const fetchClasses = async (): Promise<GameClass[]> => {
-	const classes = await getClasses();
+	const response = await getClasses();
+	const { data: classes } = response;
 
 	setState(classes);
 	return classes;

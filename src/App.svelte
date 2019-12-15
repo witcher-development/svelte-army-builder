@@ -1,11 +1,8 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { Router } from 'svelte-router-spa';
 
-	import { getState as getAuthData } from './store/auth';
-	import { state as loading, setLoading } from './store/loading';
-	import { fetchClasses } from './store/classes';
-	import { fetchCharacters } from './store/characters';
+	import { state as loading } from './store/loading';
+	import { state as auth } from './store/auth';
 
 	import Loader from './components/Loader.svelte';
 	import Login from './components/Login.svelte';
@@ -13,21 +10,12 @@
 
 	import logo from 'assets/logo.png';
 
-	onMount(async () => {
-		setLoading(true);
-
-		await fetchCharacters();
-		await fetchClasses();
-
-		setLoading(false);
-	});
-
 	const routes = [
 		{
 			name: '/',
 			component: Desk,
 			onlyIf: {
-				guard: () => getAuthData().token,
+				guard: () => $auth.token,
 				redirect: '/login',
 			},
 		},
@@ -35,7 +23,7 @@
 			name: '/login',
 			component: Login,
 			onlyIf: {
-				guard: () => !getAuthData().token,
+				guard: () => !$auth.token,
 				redirect: '/',
 			},
 		},

@@ -2,21 +2,23 @@
 	import { navigateTo } from 'svelte-router-spa';
 
 	import { logout } from '../../store/auth';
-	import { getState as getPlayer } from '../../store/player'
+	import { resetDeck } from '../../store/deck';
+	import { state as player, resetPlayer } from '../../store/player';
 	import { getClassNameById } from '../../store/classes';
 	import { getCharacterNameById } from '../../store/characters';
 
 	const onClickLogout = () => {
 		logout();
+		resetPlayer();
+		resetDeck();
 		navigateTo('/login');
 	};
 
 	let name;
-	$: name = getCharacterNameById(getPlayer().characterId);
+	$: name = getCharacterNameById($player.characterId);
 
 	let className;
-	$: className = getClassNameById(getPlayer().classId);
-
+	$: className = getClassNameById($player.classId);
 </script>
 
 <style type="text/scss">
@@ -38,13 +40,13 @@
 
 			span {
 				&.hunter {
-					color: #8BC951;
+					color: #8bc951;
 				}
 				&.druid {
-					color: #FE9536;
+					color: #fe9536;
 				}
 				&.mage {
-					color: #B2DFE9;
+					color: #b2dfe9;
 				}
 			}
 		}
@@ -78,7 +80,7 @@
 
 <header class="header">
 	<p>
-    {name}:
+		{name}:
 		<span class={className.toLowerCase()}>{className}</span>
 	</p>
 	<a on:click|preventDefault={onClickLogout}>logout</a>

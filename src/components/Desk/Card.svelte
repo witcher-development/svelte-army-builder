@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getClassNameById } from '../../store/classes';
-	import { getState as getPlayer } from '../../store/player';
-	import { getState as getDrag } from '../../store/dragDrop';
+	import { state as player } from '../../store/player';
+	import { state as drag } from '../../store/dragDrop';
 
 	export let id;
 	export let name;
@@ -23,10 +23,10 @@
 	$: className = getClassNameById(classId);
 
 	let playerClass;
-	$: playerClass = getClassNameById(getPlayer().classId);
+	$: playerClass = getClassNameById($player.classId);
 
 	let isDragged;
-	$: isDragged = !getDrag().cardId === id;
+	$: isDragged = !$drag.cardId === id;
 </script>
 
 <style type="text/scss">

@@ -5,37 +5,37 @@ import { createResponse, akaDBRequest } from './helpers';
 import { client } from './api';
 import { verifyUserToken } from './bearerService';
 
+const mapCard = ({
+	id,
+	name,
+	health,
+	attack,
+	manaCost,
+	image,
+	text,
+	flavorText,
+	rarityId,
+	classId,
+}) => ({
+	id,
+	name,
+	health,
+	attack,
+	manaCost,
+	image,
+	text,
+	flavorText,
+	rarityId,
+	classId,
+});
+
 export const getCards = async (): Promise<Response<CardResponse>> => {
 	const url = '/cards?page=2&pageSize=9&type=minion&class=hunter';
 	const response = await client(url);
 
 	const cards: Card[] = response.data.cards
 		.filter(({ image }) => image)
-		.map(
-			({
-				id,
-				name,
-				health,
-				attack,
-				manaCost,
-				image,
-				text,
-				flavorText,
-				rarityId,
-				classId,
-			}) => ({
-				id,
-				name,
-				health,
-				attack,
-				manaCost,
-				image,
-				text,
-				flavorText,
-				rarityId,
-				classId,
-			}),
-		);
+		.map(mapCard);
 
 	return createResponse<CardResponse>({
 		...response.data,
@@ -88,9 +88,8 @@ export const getDeck = async (
 
 	for (const id of ids) {
 		if (id) {
-			const card = await client(url + id);
-			console.log(card);
-			deck.push(null);
+			const response = await client(url + id);
+			deck.push(mapCard(response.data));
 		} else {
 			deck.push(null);
 		}
@@ -104,16 +103,19 @@ export const setDeck = async (token: Token, ids: Array<number | null>) => {
 
 	const decks = await getDecks();
 
-	const deck = decks.find(({ playerId }) => playerId === token.playerId);
+	const deckIndex = decks.findIndex(
+		({ playerId }) => playerId === token.playerId,
+	);
 
-	if (!deck) {
+	if (deckIndex === -1) {
 		const newDeck = Object.assign({}, deckInitState);
+		newDeck.playerId = token.playerId;
 		newDeck.deck = ids;
 
 		localStorage.setItem('app.decks', JSON.stringify([...decks, newDeck]));
 		return;
 	}
 
-	deck.deck = ids;
-	localStorage.setItem('app.decks', JSON.stringify([...decks, deck]));
+	decks[deckIndex].deck = ids;
+	localStorage.setItem('app.decks', JSON.stringify(decks));
 };

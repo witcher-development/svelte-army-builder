@@ -5,6 +5,11 @@
 	import { fetchCards, getCardImageById } from '../../store/cards';
 	import { fetchPlayer } from '../../store/player';
 	import { fetchDeck } from '../../store/deck';
+	import { fetchClasses } from '../../store/classes';
+	import {
+		getState as getCharacters,
+		fetchCharacters,
+	} from '../../store/characters';
 
 	import { state as drag } from '../../store/dragDrop';
 	import { state as dragNode } from '../../store/dragNode';
@@ -21,6 +26,10 @@
 	onMount(async () => {
 		setLoading(true);
 
+		await fetchClasses();
+		if (!getCharacters().length) {
+			await fetchCharacters();
+		}
 		await fetchCards();
 		await fetchPlayer();
 		await fetchDeck();
@@ -36,8 +45,6 @@
 
 	let imageVar;
 	$: imageVar = $drag.isDragOn ? `url(${getCardImageById($drag.cardId)})` : '';
-
-	let style = `--bgi:${imageVar}; top: ${$dragNode.y}px; left: ${$dragNode.x}px;`;
 </script>
 
 <style type="text/scss">
@@ -103,6 +110,8 @@
 	</div>
 
 	{#if $drag.isDragOn}
-		<div class="desk__drag" {style} />
+		<div
+			class="desk__drag"
+			style="--bgi:{imageVar}; top: {$dragNode.y}px; left: {$dragNode.x}px;" />
 	{/if}
 </div>
