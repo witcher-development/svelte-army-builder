@@ -19,3 +19,12 @@ export interface DragNodeCoors {
 	x: number;
 	y: number;
 }
+
+export interface Option {
+	label: string;
+	value: string | number;
+}
+export interface Filter {
+	name: string;
+	options: Option[];
+}

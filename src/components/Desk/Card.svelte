@@ -26,7 +26,7 @@
 	$: playerClass = getClassNameById($player.classId);
 
 	let isDragged;
-	$: isDragged = !$drag.cardId === id;
+	$: isDragged = $drag.cardId === id;
 </script>
 
 <style type="text/scss">

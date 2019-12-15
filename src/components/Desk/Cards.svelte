@@ -1,7 +1,14 @@
 <script lang="ts">
 	import { state as cards } from '../../store/cards';
 	import { state as drag } from '../../store/dragDrop';
+
 	import Card from './Card.svelte';
+	import Filter from './Filter.svelte';
+
+	let isFilterVisible = false;
+	const toggleFilter = () => {
+		isFilterVisible = !isFilterVisible;
+	};
 </script>
 
 <style type="text/scss">
@@ -22,13 +29,48 @@
 		background-image: url(assets/cards-bgi.jpg);
 		background-size: contain;
 
-		&__title {
-			margin-bottom: 20px;
-			padding-left: 20px;
+		position: relative;
 
+		&__header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			margin-bottom: 20px;
+			padding: 0 20px;
+		}
+
+		&__title {
 			color: #e0e0e0;
 			text-align: left;
 			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+		}
+
+		&__filter {
+			width: 30px;
+			height: 30px;
+
+			margin-bottom: -7px;
+
+			background-image: url(assets/filter.png);
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
+
+			position: relative;
+
+			cursor: pointer;
+
+			&:before {
+				content: '';
+
+				display: block;
+				width: 100%;
+				height: 100%;
+
+				position: absolute;
+				transform: scale(2.5);
+			}
 		}
 
 		&__list {
@@ -61,7 +103,10 @@
 </style>
 
 <div class="cards_wrapper">
-	<h2 class="cards__title">All cards</h2>
+	<div class="cards__header">
+		<h2 class="cards__title">All cards</h2>
+		<div class="cards__filter" on:click={toggleFilter} />
+	</div>
 	<div class="cards">
 		<ul class="cards__list">
 			{#each $cards as card}
@@ -70,8 +115,11 @@
 				</li>
 			{/each}
 		</ul>
+		{#if isFilterVisible}
+			<Filter />
+		{/if}
 	</div>
 	{#if $drag.dragFromDeck}
-		<div class="cards__drop-target"></div>
+		<div class="cards__drop-target" />
 	{/if}
 </div>
