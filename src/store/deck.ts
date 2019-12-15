@@ -1,10 +1,12 @@
 import { get, writable } from 'svelte/store';
 
-import { Card, Deck, DeckForStorage } from '../types';
+import { Card, Deck } from '../types/client';
+import { Deck as ServerDeck } from '../types/server';
 import { setDeck as saveDeck } from '../server';
-import { getDeckInitState } from "../initStates";
 
-export const state = writable<Deck>(getDeckInitState());
+const cardsInDeck = 4;
+const deckInitState: Deck = [...Array(cardsInDeck)].map(() => null);
+export const state = writable<Deck>(deckInitState);
 
 export const getState = (): Deck => get(state);
 
@@ -44,8 +46,8 @@ export const updateDeck = (deck: Deck) => {
 
 	const player = get(state);
 
-	saveDeck(player.id, player.token, convertDeckForStorage(deck));
+	saveDeck(player.id, player.token, convertDeckForSave(deck));
 };
 
-const convertDeckForStorage = (deck: Deck): DeckForStorage =>
+const convertDeckForSave = (deck: Deck): ServerDeck =>
 	deck.map((card) => (card ? card.id : null));

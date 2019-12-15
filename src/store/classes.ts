@@ -1,9 +1,6 @@
 import { get, writable } from 'svelte/store';
 
-interface GameClass {
-	id: number;
-	name: string;
-}
+import { GameClass } from "../types/client";
 
 export const state = writable<GameClass[]>([], () => {});
 export const getState = (): GameClass[] => get(state);

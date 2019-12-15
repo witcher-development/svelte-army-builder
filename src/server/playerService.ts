@@ -1,26 +1,31 @@
-import { getPlayerInitState } from './initStates';
-import {Response} from "../types";
+import {Player, Response} from "../types/server";
 
-const getPlayers = async (): Promise<PlayerFromStorage[]> => {
+const playerInitState: Player = {
+	id: 0,
+	characterId: 0,
+	classId: 0,
+};
+
+const getPlayers = async (): Promise<Player[]> => {
 	return await akaDBRequest((resolve) => {
 		resolve(JSON.parse(localStorage.getItem('app.players') || '[]'));
 	});
 };
 const getPlayerById = async (
 	id: number,
-): Promise<PlayerFromStorage | undefined> => {
-	const playersDB: PlayerFromStorage[] = await getPlayers();
+): Promise<Player | undefined> => {
+	const playersDB: Player[] = await getPlayers();
 
 	return playersDB.find((player) => id === player.id);
 };
 
-const setPlayers = async (players: PlayerFromStorage[]) => {
+const setPlayers = async (players: Player[]) => {
 	await akaDBRequest(async (res) => {
 		localStorage.setItem('app.players', JSON.stringify(players));
 		res();
 	});
 };
-const setPlayerById = async (player: PlayerFromStorage) => {
+const setPlayerById = async (player: Player) => {
 	const players = await getPlayers();
 	const index = players.findIndex(({ id }) => player.id === id);
 	if (index !== -1) {
@@ -30,17 +35,17 @@ const setPlayerById = async (player: PlayerFromStorage) => {
 };
 
 export const getPlayer = async (token) => {
-	const playersDB: PlayerFromStorage[] = await getPlayers();
+	const playersDB: Player[] = await getPlayers();
 
 	if (!playersDB.length) return createResponse<null>(null, 'db is empty');
 };
 export const createPlayer = async (
 	characterId: number,
-): Promise<Response<PlayerFromStorage>> => {
-	const playersDB: PlayerFromStorage[] = await getPlayers();
+): Promise<Response<Player>> => {
+	const playersDB: Player[] = await getPlayers();
 
-	const playerTemplate: PlayerFromStorage = getPlayerInitState();
-	const player: PlayerFromStorage = Object.assign({}, playerTemplate, {
+	const playerTemplate: Player = Object.assign({}, playerInitState);
+	const player: Player = Object.assign({}, playerTemplate, {
 		id: await getFreeId(),
 		characterId,
 		classId: getCharacterClass(characterId),
@@ -48,8 +53,7 @@ export const createPlayer = async (
 
 	setPlayers([...playersDB, player]);
 
-	player.token = createUserToken();
-	return createResponse<PlayerFromStorage>(player);
+	return createResponse<Player>(player);
 };
 
 const getFreeId = async (): Promise<number> => {

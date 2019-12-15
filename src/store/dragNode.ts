@@ -1,9 +1,7 @@
 import { get, writable } from 'svelte/store';
 
-interface DragNodeCoors {
-	x: number;
-	y: number;
-}
+import { DragNodeCoors } from "../types/client";
+
 const dragNodeInitCoors: DragNodeCoors = {
 	x: -100,
 	y: -100,

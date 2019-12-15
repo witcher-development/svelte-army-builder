@@ -1,3 +1,5 @@
+import { Character, GameClass } from "../types/server";
+
 // @ts-ignore
 import Jaina from 'assets/players/Jaina.png';
 // @ts-ignore
@@ -5,7 +7,7 @@ import Malfurion from 'assets/players/Malfurion.png';
 // @ts-ignore
 import Rexxar from 'assets/players/Rexxar.png';
 
-const classesDB = [
+const classesDB: GameClass[] = [
 	{
 		id: 2,
 		name: 'Druid',
@@ -47,7 +49,7 @@ const classesDB = [
 		name: 'Neutral',
 	},
 ];
-const charactersDB = [
+const charactersDB: Character[] = [
 	{
 		id: 1,
 		name: 'Jaina',
@@ -65,7 +67,7 @@ const charactersDB = [
 	},
 ];
 
-const getCharacterClass = (characterId: number): number => {
+export const getCharacterClass = (characterId: number): number => {
 	if (characterId === 1) {
 		return 4;
 	} else if (characterId === 2) {
@@ -76,6 +78,6 @@ const getCharacterClass = (characterId: number): number => {
 	return 0;
 };
 
-export const getClasses = () => {};
+export const getClasses = () => [...classesDB];
 
-export const getCharacters = () => {};
+export const getCharacters = () => [...charactersDB];

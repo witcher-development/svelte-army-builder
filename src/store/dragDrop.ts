@@ -1,10 +1,7 @@
 import { get, writable } from 'svelte/store';
 
-interface Drag {
-	isDragOn: boolean;
-	cardId: number;
-	dragFromDeck: boolean;
-}
+import { Drag } from "../types/client";
+
 const dragInitState: Drag = {
 	isDragOn: false,
 	cardId: 0,

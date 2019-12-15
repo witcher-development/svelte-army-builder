@@ -1,4 +1,5 @@
-import {Card, CardResponse, Deck, DeckForStorage, Response} from "../types";
+import { Card, CardResponse, Deck, Response, Token } from '../types/server';
+import { Deck as ClientDeck } from '../types/client';
 
 export const getCards = async (): Promise<Response<CardResponse>> => {
 	const url = '/cards?page=2&pageSize=9&type=minion&class=hunter';
@@ -8,17 +9,17 @@ export const getCards = async (): Promise<Response<CardResponse>> => {
 		.filter(({ image }) => image)
 		.map(
 			({
-				 id,
-				 name,
-				 health,
-				 attack,
-				 manaCost,
-				 image,
-				 text,
-				 flavorText,
-				 rarityId,
-				 classId,
-			 }) => ({
+				id,
+				name,
+				health,
+				attack,
+				manaCost,
+				image,
+				text,
+				flavorText,
+				rarityId,
+				classId,
+			}) => ({
 				id,
 				name,
 				health,
@@ -40,8 +41,8 @@ export const getCards = async (): Promise<Response<CardResponse>> => {
 
 export const getDeck = async (
 	token: Token,
-	ids: DeckForStorage,
-): Promise<Response<Deck | null>> => {
+	ids: Deck,
+): Promise<Response<ClientDeck | null>> => {
 	if (!(await verifyUserToken(token)))
 		return createResponse<null>(null, 'wrong token');
 
@@ -64,7 +65,7 @@ export const getDeck = async (
 export const setDeck = async (
 	playerId: number,
 	token: Token,
-	ids: DeckForStorage,
+	ids: Deck,
 ) => {
 	if (!(await verifyUserToken(token))) return;
 

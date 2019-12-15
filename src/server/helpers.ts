@@ -1,4 +1,4 @@
-import { Response } from "../types";
+import { Response } from "../types/server";
 
 export const createResponse = <T>(data: T, message?: string): Response<T> => ({
 	data,

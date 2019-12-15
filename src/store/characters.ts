@@ -1,10 +1,6 @@
 import { get, writable } from 'svelte/store';
 
-interface Character {
-	id: number;
-	name: string;
-	image: string;
-}
+import { Character } from "../types/client";
 
 export const state = writable<Character[]>([], () => {});
 export const getState = (): Character[] => get(state);

@@ -1,14 +1,17 @@
 import { get, writable } from 'svelte/store';
 
-import { Response, Token } from '../types';
+import { Token } from '../types/client';
+import { Response } from '../types/server';
+
 import { auth, createPlayer } from '../server';
 
-const initAuthState: Token = {
+const tokenInitState: Token = {
 	playerId: 0,
 	token: false,
+	expiredDate: null,
 };
-const tokenFromStorage: Token = JSON.parse(localStorage.getItem('app.token') || 'null');
-export const state = writable(tokenFromStorage || initAuthState);
+const token: Token = JSON.parse(localStorage.getItem('app.token') || 'null');
+export const state = writable(token || tokenInitState);
 
 export const getState = (): Token => get(state);
 

@@ -1,9 +1,14 @@
 import { writable } from 'svelte/store';
 
-import { getPlayerInitState } from '../initStates';
-import { Player } from '../types';
+import { Player } from '../types/client';
 
-export const state = writable(getPlayerInitState());
+const playerInitState: Player = {
+	id: 0,
+	characterId: 0,
+	classId: 0,
+};
+
+export const state = writable(playerInitState);
 export const setPlayer = (player: Player) => {
 	state.set(player);
 };

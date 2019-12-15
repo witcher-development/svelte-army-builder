@@ -1,6 +1,6 @@
 import { get, writable } from 'svelte/store';
 
-import { Card } from '../types';
+import { Card } from '../types/client';
 
 const cardsInitState: Card[] = [];
 export const state = writable(cardsInitState);
