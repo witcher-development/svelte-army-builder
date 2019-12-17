@@ -1,4 +1,5 @@
 import { get, writable } from 'svelte/store';
+import { navigateTo } from 'svelte-router-spa';
 
 import { Token } from '../types/client';
 import { Response } from '../types/server';
@@ -30,4 +31,5 @@ export const login = async (characterId: number): Promise<Token> => {
 export const logout = () => {
 	localStorage.setItem('app.token', '');
 	setToken(tokenInitState);
+	navigateTo('/');
 };

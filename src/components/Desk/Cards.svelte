@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { state as cards } from '../../store/cards';
 	import { state as drag } from '../../store/dragDrop';
+	import { setLoading } from '../../store/loading';
+	import { fetchCards } from '../../store/cards';
 
 	import Card from './Card.svelte';
 	import Filter from './Filter.svelte';
@@ -9,6 +11,14 @@
 	const toggleFilter = () => {
 		isFilterVisible = !isFilterVisible;
 	};
+
+	const onNavigateOrFilter = async () => {
+		toggleFilter();
+
+		setLoading(true);
+		await fetchCards();
+		setLoading(false);
+	}
 </script>
 
 <style type="text/scss">
@@ -116,7 +126,7 @@
 			{/each}
 		</ul>
 		{#if isFilterVisible}
-			<Filter />
+			<Filter on:apply={onNavigateOrFilter} />
 		{/if}
 	</div>
 	{#if $drag.dragFromDeck}

@@ -21,7 +21,7 @@ client.interceptors.request.use(async (config) => {
 		access_token: token,
 	};
 
-	config.params = config.params || params;
+	config.params = config.params ? Object.assign(config.params, params) : params;
 
 	return config;
 });

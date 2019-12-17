@@ -27,4 +27,11 @@ export interface Option {
 export interface Filter {
 	name: string;
 	options: Option[];
+	current: Option | null,
+	color: string,
+}
+
+export interface Navigation {
+	total: number;
+	current: number;
 }

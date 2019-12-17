@@ -29,9 +29,12 @@ const mapCard = ({
 	classId,
 });
 
-export const getCards = async (): Promise<Response<CardResponse>> => {
-	const url = '/cards?page=2&pageSize=9&type=minion&class=hunter';
-	const response = await client(url);
+type Params = { [k: string]: string | number };
+export const getCards = async (
+	params: Params,
+): Promise<Response<CardResponse>> => {
+	const url = '/cards?page=2&pageSize=9&type=minion';
+	const response = await client(url, { params });
 
 	const cards: Card[] = response.data.cards
 		.filter(({ image }) => image)
