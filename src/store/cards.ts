@@ -4,6 +4,7 @@ import { Card, Filter } from '../types/client';
 import { Response, CardResponse } from '../types/server';
 
 import { getState as getFilters } from './filter';
+import { getState as getPage, setTotal } from './pagination';
 import { getCards } from '../server';
 
 const cardsInitState: Card[] = [];
@@ -25,6 +26,7 @@ export const getCardImageById = (cardId: number): string | void => {
 
 export const fetchCards = async (): Promise<Card[]> => {
 	const filters: Filter[] = getFilters();
+	const page: number = getPage().current;
 	const params: { [k: string]: string | number } = {};
 
 	filters.forEach(({ name, current }) => {
@@ -36,12 +38,13 @@ export const fetchCards = async (): Promise<Card[]> => {
 		}
 	});
 
+	params.page = page;
+
 	const response: Response<CardResponse> = await getCards(params);
 
 	const { cards } = response.data;
 
-	console.log(response.data);
-
+	setTotal(response.data.pageCount);
 	setCards(cards);
 	return cards;
 };

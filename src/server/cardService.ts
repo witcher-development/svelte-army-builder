@@ -33,7 +33,7 @@ type Params = { [k: string]: string | number };
 export const getCards = async (
 	params: Params,
 ): Promise<Response<CardResponse>> => {
-	const url = '/cards?page=2&pageSize=9&type=minion';
+	const url = '/cards?pageSize=9&type=minion';
 	const response = await client(url, { params });
 
 	const cards: Card[] = response.data.cards

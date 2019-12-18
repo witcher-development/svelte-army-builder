@@ -6,19 +6,29 @@
 
 	import Card from './Card.svelte';
 	import Filter from './Filter.svelte';
+	import Pagination from './Pagination.svelte';
 
 	let isFilterVisible = false;
 	const toggleFilter = () => {
 		isFilterVisible = !isFilterVisible;
 	};
 
-	const onNavigateOrFilter = async () => {
+	const onFilterApply = () => {
 		toggleFilter();
 
+		request();
+	};
+
+	const request = async () => {
 		setLoading(true);
-		await fetchCards();
-		setLoading(false);
-	}
+		try {
+			await fetchCards();
+		} catch (e) {
+			alert('blizzard ignores you');
+		} finally {
+			setLoading(false);
+		}
+	};
 </script>
 
 <style type="text/scss">
@@ -126,7 +136,10 @@
 			{/each}
 		</ul>
 		{#if isFilterVisible}
-			<Filter on:apply={onNavigateOrFilter} />
+			<Filter on:apply={onFilterApply} />
+		{/if}
+		{#if $cards.length}
+			<Pagination on:change={request} />
 		{/if}
 	</div>
 	{#if $drag.dragFromDeck}

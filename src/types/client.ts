@@ -31,7 +31,7 @@ export interface Filter {
 	color: string,
 }
 
-export interface Navigation {
+export interface Pagination {
 	total: number;
 	current: number;
 }

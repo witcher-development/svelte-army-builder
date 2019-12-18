@@ -26,15 +26,19 @@
 	onMount(async () => {
 		setLoading(true);
 
-		await fetchClasses();
-		if (!getCharacters().length) {
-			await fetchCharacters();
+		try {
+			await fetchClasses();
+			if (!getCharacters().length) {
+				await fetchCharacters();
+			}
+			await fetchCards();
+			await fetchPlayer();
+			await fetchDeck();
+		} catch (e) {
+			alert('blizzard ignores you');
+		} finally {
+			setLoading(false);
 		}
-		await fetchCards();
-		await fetchPlayer();
-		await fetchDeck();
-
-		setLoading(false);
 
 		setDragDropHandlers();
 
