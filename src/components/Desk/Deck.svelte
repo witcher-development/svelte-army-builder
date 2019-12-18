@@ -3,6 +3,7 @@
 	import { state as drag } from '../../store/dragDrop';
 
 	import Card from './Card.svelte';
+	import Stats from './DeckStats.svelte';
 </script>
 
 <style type="text/scss">
@@ -36,6 +37,7 @@
 			display: flex;
 			justify-content: space-between;
 
+			margin-bottom: 33px;
 			padding: 0 42px 0 36px;
 
 			list-style: none;
@@ -75,5 +77,6 @@
 				</li>
 			{/each}
 		</ul>
+		<Stats />
 	</div>
 </div>
